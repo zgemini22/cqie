@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblRoleMenuRelationDao">
+    <insert id="insertList">
+        insert into tbl_role_menu_relation (role_id, menu_id)
+        values
+        <foreach collection ="list" item="item"  separator =",">
+            (#{item.roleId}, #{item.menuId})
+        </foreach>
+    </insert>
+    <insert id="copyTemplateRole">
+        INSERT INTO tbl_role_menu_relation (role_id, menu_id)
+        SELECT
+        #{roleId} AS role_id,
+        rp.menu_id
+        FROM tbl_role re
+        INNER JOIN tbl_role_menu_relation rp ON rp.role_id = re.id
+        WHERE re.role_type = #{roleType}
+    </insert>
+    <delete id="deleteList">
+        <foreach collection="list" item="item" separator=";">
+            DELETE FROM tbl_role_menu_relation
+            WHERE role_id = #{item.roleId} AND menu_id = #{item.menuId}
+        </foreach>
+    </delete>
+</mapper>

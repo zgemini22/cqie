@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblUserDao">
+    <update id="addLoginFailCount">
+        UPDATE tbl_user
+        SET login_fail_count = login_fail_count + 1
+        WHERE login_name = #{loginName}
+    </update>
+</mapper>

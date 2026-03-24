@@ -1,0 +1,54 @@
+package com.zds.biz.constant.device;
+
+import com.zds.biz.constant.BaseEnum;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public enum DeviceDropStatusEnum implements BaseEnum<String> {
+    NORMAL("NORMAL", "正常"),
+    ABNORMAL("ABNORMAL", "异常"),
+    REPEAL("REPEAL", "报废"),;
+
+    private String key;
+
+    private String msg;
+
+    DeviceDropStatusEnum(String key, String msg) {
+        this.key = key;
+        this.msg = msg;
+    }
+
+    @Override
+    public String getKey() {
+        return this.key;
+    }
+
+    @Override
+    public String getTitle() {
+        return this.msg;
+    }
+
+    public static DeviceDropStatusEnum query(String key) {
+        if (key != null) {
+            DeviceDropStatusEnum[] values = DeviceDropStatusEnum.values();
+            for (DeviceDropStatusEnum result : values) {
+                if (result.getKey().equals(key)) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, String> getMap() {
+        Map<String, String> map = new HashMap<>();
+        DeviceDropStatusEnum[] values = DeviceDropStatusEnum.values();
+        for (DeviceDropStatusEnum result : values) {
+            if (!map.containsKey(result.getKey())) {
+                map.put(result.getKey(), result.getTitle());
+            }
+        }
+        return map;
+    }
+}

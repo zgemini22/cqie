@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TpcInspectionContentDao">
+
+    <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.TpcInspectionContentResponse">
+        SELECT
+            p.id,
+            p.plan_name AS planName,
+            p.plan_category AS planCategory,
+            p.inspect_status AS status,
+            DATE_FORMAT(p.inspect_time, '%Y-%m-%d %H:%i:%s') AS inspectTime,
+            c.construction_name AS constructionName,
+            o.organization_name AS organizationName,
+            u.name AS inspector
+        FROM tpc_inspection_plan p
+        LEFT JOIN tpc_construction c ON p.construction_id = c.id
+        LEFT JOIN tbl_organization o ON p.org_id = o.id
+        LEFT JOIN tbl_user u ON p.inspector = u.id
+        <where>
+            <if test="request.planName != null and request.planName != ''">
+                AND p.plan_name LIKE CONCAT('%', #{request.planName}, '%')
+            </if>
+            <if test="request.planCategory != null and request.planCategory != ''">
+                AND p.plan_category = #{request.planCategory}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND p.inspect_status = #{request.status}
+            </if>
+            <if test="request.constructionName != null and request.constructionName != ''">
+                AND c.construction_name LIKE CONCAT('%', #{request.constructionName}, '%')
+            </if>
+            <if test="request.organizationName != null and request.organizationName != ''">
+                AND o.organization_name LIKE CONCAT('%', #{request.organizationName}, '%')
+            </if>
+            <if test="request.inspectTimeStart != null">
+                AND p.inspect_time &gt;= #{request.inspectTimeStart}
+            </if>
+            <if test="request.inspectTimeEnd != null">
+                AND p.inspect_time &lt;= #{request.inspectTimeEnd}
+            </if>
+        </where>
+        /*ORDER BY p.create_time DESC*/
+    </select>
+
+    <select id="selectDetailById" resultType="com.zds.biz.vo.response.user.TpcInspectionContentDetailResponse">
+        SELECT
+            p.plan_name AS planName,
+            p.plan_category AS planCategory,
+            p.inspection_frequency AS inspectionFrequency,
+            p.valid_start_date AS validStartDate,
+            p.valid_end_date AS validEndDate,
+            p.inspect_status AS inspectStatus,
+            c.construction_name AS constructionName,
+            c.address,
+            o.organization_name AS organizationName,
+            a.area_name AS areaName,
+            u.name AS inspectorName,
+            ic.content AS inspectionContent
+        FROM tpc_inspection_plan p
+        LEFT JOIN tpc_construction c ON p.construction_id = c.id
+        LEFT JOIN tbl_organization o ON p.org_id = o.id
+        LEFT JOIN tbl_area_node a ON c.area_code = a.code
+        LEFT JOIN tbl_user u ON p.inspector = u.id
+        LEFT JOIN tpc_inspection_content ic ON o.id = ic.org_id
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectContentByPlanId" resultType="com.zds.user.po.TpcInspectionContent">
+        SELECT
+            ic.id,
+            ic.type,
+            ic.content,
+            ic.org_id AS orgId,
+            ic.create_time AS createTime,
+            ic.create_id AS createId,
+            ic.update_time AS updateTime,
+            ic.update_id AS updateId,
+            ic.deleted
+        FROM tpc_inspection_plan_content pc
+        INNER JOIN tpc_inspection_content ic ON pc.content_id = ic.id
+        WHERE pc.plan_id = #{planId}
+          AND pc.deleted = 0
+          AND ic.deleted = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-file
+  cloud:
+    nacos:
+      username: @package.nacosuser@
+      password: @package.nacospwd@
+      discovery:
+        namespace: @package.environment@
+      config:
+        server-addr: @package.nacos@ #nacos中心地址
+        file-extension: yaml # 配置文件格式
+        namespace: @package.environment@
+  profiles:
+    active: @package.environment@ # 环境标识
+    include: common # 公共配置文件

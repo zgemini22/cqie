@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.flow.dao.HdDemoDao">
+
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT INTO hd_demo (
+        initiate_date,
+        task_id,
+        name,
+        task_level,
+        type,
+        handler,
+        handler_phone,
+        due_day,
+        status,
+        start_date,
+        complete_status,
+        execu_node,
+        group_name,
+        comment_conet,
+        accident_id
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.initiateDate},
+            #{item.taskId},
+            #{item.name},
+            #{item.taskLevel},
+            #{item.type},
+            #{item.handler},
+            #{item.handlerPhone},
+            #{item.dueDay},
+            #{item.status},
+            #{item.startDate},
+            #{item.completeStatus},
+            #{item.execuNode},
+            #{item.groupName},
+            #{item.commentConet},
+            #{item.accidentId}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.KpiBenchmarkAlarmDao">
+    <insert id="insertList" keyColumn="id" keyProperty="id" parameterType="com.zds.user.po.KpiBenchmarkAlarm" useGeneratedKeys="true">
+        INSERT INTO kpi_benchmark_alarm (create_time,
+        create_id,
+        update_time,
+        update_id,
+        deleted,
+        organization_id,
+        benchmark_id,
+        symbol,
+        value,
+        grade,
+        sort)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.createTime}, #{item.createId}, #{item.updateTime}, #{item.updateId},
+            #{item.deleted},#{item.organizationId}, #{item.benchmarkId},
+            #{item.symbol}, #{item.value}, #{item.grade},#{item.sort})
+        </foreach>
+    </insert>
+
+    <update id="updateList">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";" >
+            UPDATE kpi_benchmark_alarm
+            SET update_id = #{item.updateId},
+            deleted = #{item.deleted},
+            organization_id = #{item.organizationId},
+            benchmark_id = #{item.benchmarkId},
+            symbol = #{item.symbol},
+            value = #{item.value},
+            grade = #{item.grade},
+            sort = #{item.sort}
+            WHERE id = #{item.id}
+        </foreach>
+    </update>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.flow.dao.TblTaskShipDao">
+    <insert id="insertList" parameterType="com.zds.flow.po.TblTaskShip" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tbl_task_ship (task_id, todo_id, project_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.taskId}, #{item.todoId}, #{item.projectId})
+        </foreach>
+    </insert>
+
+
+    <select id="getTaskId" resultType="java.lang.String">
+        SELECT
+            task_id AS taskId
+        FROM tbl_task_ship
+        WHERE todo_id = #{todoId}
+    </select>
+
+    <select id="getProjectId" resultType="java.lang.String">
+        SELECT
+            project_id AS projectId
+        FROM tbl_task_ship
+        WHERE task_id = #{taskId}
+    </select>
+    <select id="getTodoId" resultType="java.lang.String">
+        SELECT
+            todo_id AS todoId
+        FROM tbl_task_ship
+        WHERE project_id = #{projectId}
+    </select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblCalendarMaintanceDao">
+    <insert id="insertList" keyColumn="id" keyProperty="id" parameterType="com.zds.user.po.TblCalendarMaintance" useGeneratedKeys="true">
+        insert into tbl_calendar_maintance (calendar_year, calendar_date, day_type, create_id, create_time, deleted)
+        values
+        <foreach collection ="list" item="item"  separator =",">
+            (#{item.calendarYear}, #{item.calendarDate}, #{item.dayType}, #{item.createId}, #{item.createTime}, #{item.deleted})
+        </foreach>
+    </insert>
+    <select id="findByTime" resultType="com.zds.biz.vo.response.user.CalendarResponse">
+        SELECT
+        cm.calendar_date AS calendarDate,
+        cm.day_type AS dayType
+        FROM tbl_calendar_maintance cm
+        WHERE cm.calendar_date BETWEEN #{startTime} AND #{endTime}
+        ORDER BY cm.calendar_date ASC
+  </select>
+</mapper>

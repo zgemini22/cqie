@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblTodoFileDao">
+
+    <insert id="insertList" parameterType="com.zds.user.po.TblTodoFile" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tbl_todo_file (todo_id, real_file_name, file_name, file_type)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.todoId}, #{item.realFileName}, #{item.fileName}, #{item.fileType})
+        </foreach>
+    </insert>
+</mapper>

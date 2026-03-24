@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TpcInspectionPlanDao">
+
+    <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.TpcInspectionPlanResponse">
+        SELECT
+            p.id,
+            p.plan_name AS planName,
+            p.plan_category AS planCategory,
+            p.inspection_frequency AS inspectionFrequency,
+            p.valid_start_date AS validStartDate,
+            p.valid_end_date AS validEndDate,
+            p.status,
+            c.construction_name AS constructionName,
+            c.address,
+            a.area_name AS areaName,
+            o.organization_name AS organizationName
+        FROM tpc_inspection_plan p
+        LEFT JOIN tpc_construction c ON p.construction_id = c.id
+        LEFT JOIN tbl_organization o ON p.org_id = o.id
+        LEFT JOIN tbl_area_node a ON c.area_code = a.code
+        <where>
+            <if test="request.planName != null and request.planName != ''">
+                AND p.plan_name LIKE CONCAT('%', #{request.planName}, '%')
+            </if>
+            <if test="request.planCategory != null and request.planCategory != ''">
+                AND p.plan_category = #{request.planCategory}
+            </if>
+            <if test="request.status != null and request.status != ''">
+                AND p.status = #{request.status}
+            </if>
+            <if test="request.validStartDate != null">
+                AND p.valid_start_date &gt;= #{request.validStartDate}
+            </if>
+            <if test="request.validEndDate != null">
+                AND p.valid_end_date &lt;= #{request.validEndDate}
+            </if>
+            <if test="request.constructionName != null and request.constructionName != ''">
+                AND c.construction_name LIKE CONCAT('%', #{request.constructionName}, '%')
+            </if>
+            <if test="request.organizationName != null and request.organizationName != ''">
+                AND o.organization_name LIKE CONCAT('%', #{request.organizationName}, '%')
+            </if>
+            <if test="request.areaName != null and request.areaName != ''">
+                AND a.area_name LIKE CONCAT('%', #{request.areaName}, '%')
+            </if>
+        </where>
+        /*ORDER BY p.create_time DESC*/
+    </select>
+
+    <select id="selectDetailById" resultType="com.zds.biz.vo.response.user.TpcInspectionPlanDetailResponse">
+        SELECT
+            p.id,
+            p.plan_name AS planName,
+            p.plan_category AS planCategory,
+            p.inspection_frequency AS inspectionFrequency,
+            p.valid_start_date AS validStartDate,
+            p.valid_end_date AS validEndDate,
+            p.inspector,
+            u.name AS inspectorName,
+            u.phone AS inspectorPhone,
+            c.construction_name AS constructionName,
+            c.address,
+            a.area_name AS areaName,
+            o.organization_name AS organizationName,
+            ic.content AS inspectionContent
+        FROM tpc_inspection_plan p
+        LEFT JOIN tpc_construction c ON p.construction_id = c.id
+        LEFT JOIN tbl_organization o ON p.org_id = o.id
+        LEFT JOIN tbl_area_node a ON c.area_code = a.code
+        LEFT JOIN tbl_user u ON p.inspector = u.id
+        LEFT JOIN tpc_inspection_content ic ON o.id = ic.org_id
+        WHERE p.id = #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,11 @@
+feignurl:
+  isOpen: false
+  serviceUser: http://localhost:8081
+  serviceFile: http://localhost:8082
+  serviceDispose: http://localhost:8083
+  serviceInfo: http://localhost:8084
+  serviceFlow: http://localhost:8085
+  serviceDevice: http://localhost:8086
+  serviceExamine: http://localhost:8087
+  serviceMeter: http://localhost:8088
+  serviceAiDispose: http://172.17.0.1:80
