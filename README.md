@@ -3,8 +3,6 @@
 - 首次编译：
   - mvn clean install -Dmaven.test.skip=true
   - mvn clean package -Dmaven.test.skip=true
-- swagger用户名 密码 ： zdsoft / gxAft7fJ%t ，地址：http://localhost:8080/doc.html
-- 后台管理员账号admin 密码 V2#JpTau53h5%uksXw4G
 #### 项目结构
 - api-gateway：网关模块
 - biz-common：基础通用模块
