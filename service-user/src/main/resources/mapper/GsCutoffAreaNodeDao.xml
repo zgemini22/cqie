@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.GsCutoffAreaNodeDao">
+
+    <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.GsCutoffAreaNodeResponse">
+        SELECT
+            id,
+            org_id AS orgId,
+            source_type AS sourceType,
+            source_id AS sourceId,
+            district_code AS districtCode,
+            street_code AS streetCode,
+            detail_address AS detailAddress,
+            create_time AS createTime,
+            create_id AS createId
+        FROM gs_cutoff_area_node
+        <where>
+            deleted = 0
+            <if test="request.id != null">
+                AND id = #{request.id}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-public class FileConfig { 
+public class FileConfig {
 
     /**
      * 文件上传大小限制

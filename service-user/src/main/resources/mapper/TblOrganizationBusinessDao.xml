@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblOrganizationBusinessDao">
+
+    <select id="selectPageWithCondition" resultType="com.zds.biz.vo.response.user.TblOrganizationBusinessResponse">
+        SELECT
+        id,
+        name,
+        type,
+        status,
+        code,
+        address,
+        contact_person AS contactPerson,
+        contact_phone AS contactPhone,
+        principal_phone AS principalPhone,
+        principal,
+        staff_count AS staffCount,
+        org_id AS orgId
+        FROM tbl_organization_business
+        <where>
+            <if test="request.name != null and request.name != ''">
+                AND name LIKE CONCAT('%', #{request.name}, '%')
+            </if>
+            <if test="request.type != null and request.type != ''">
+                AND type = #{request.type}
+            </if>
+            <if test="request.status != null">
+                AND status = #{request.status}
+            </if>
+            <if test="request.code != null and request.code != ''">
+                AND code = #{request.code}
+            </if>
+            <if test="request.address != null and request.address != ''">
+                AND address LIKE CONCAT('%', #{request.address}, '%')
+            </if>
+            <if test="request.contactPerson != null and request.contactPerson != ''">
+                AND contact_person LIKE CONCAT('%', #{request.contactPerson}, '%')
+            </if>
+            <if test="request.contactPhone != null and request.contactPhone != ''">
+                AND contact_phone LIKE CONCAT('%', #{request.contactPhone}, '%')
+            </if>
+            <if test="request.principalPhone != null and request.principalPhone != ''">
+                AND principal_phone LIKE CONCAT('%', #{request.principalPhone}, '%')
+            </if>
+            <if test="request.principal != null and request.principal != ''">
+                AND principal LIKE CONCAT('%', #{request.principal}, '%')
+            </if>
+            <if test="request.orgId != null">
+                AND org_id = #{request.orgId}
+            </if>
+            AND deleted = 0
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectDetailById" resultType="com.zds.biz.vo.response.user.TblOrganizationBusinessResponse">
+        SELECT
+            id,
+            name,
+            type,
+            status,
+            code,
+            address,
+            contact_person AS contactPerson,
+            contact_phone AS contactPhone,
+            principal_phone AS principalPhone,
+            principal,
+            staff_count AS staffCount,
+            org_id AS orgId
+        FROM tbl_organization_business
+        WHERE id = #{id}
+          AND deleted = 0
+    </select>
+
+</mapper>

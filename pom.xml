@@ -23,6 +23,8 @@
     <packaging>pom</packaging>
 
     <properties>
+        <lombok.version>1.18.30</lombok.version>
+        <seata.version>1.8.0</seata.version>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -171,10 +173,10 @@
     <profiles>
         <profile>
             <!-- 开发环境 -->
-            <id>dev1</id>
+            <id>dev</id>
             <properties>
                 <package.environment>dev1</package.environment>
-                <package.nacos>10.253.9.137:8848</package.nacos>
+                <package.nacos>10.253.9.138:8848</package.nacos>
                 <package.nacosuser>nacos</package.nacosuser>
                 <package.nacospwd>nacos</package.nacospwd>
             </properties>

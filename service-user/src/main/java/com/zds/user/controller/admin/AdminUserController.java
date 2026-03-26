@@ -153,9 +153,7 @@ public class AdminUserController {
 
     @ApiOperation(value = "获取登录验证码", notes = "key存在Response Headers的rightCode")
     @RequestMapping(value = "/login/code", method = RequestMethod.GET)
-    public void loginCode(HttpServletResponse response) {
-        translucentKaptchaService.getLoginCode(response);
-    }
+    public void loginCode(HttpServletResponse response) {translucentKaptchaService.getLoginCode(response);}
 
     @Authorization
     @ApiOperation("用户列表")

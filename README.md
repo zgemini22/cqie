@@ -1,8 +1,11 @@
 #### 项目初始化
 - 设置jdk版本为jdk11
+- 修改idea编码为utf-8，打开 IDEA 设置：File -> Settings -> Editor -> File Encodings（Windows/Linux）或 IntelliJ IDEA -> Settings -> Editor -> File Encodings（Mac）。
 - 首次编译：
   - mvn clean install -Dmaven.test.skip=true
   - mvn clean package -Dmaven.test.skip=true
+- swagger用户名 密码 ： zdsoft / gxAft7fJ%t ，地址：http://localhost:8080/doc.html
+- 后台管理员账号admin 密码 V2#JpTau53h5%uksXw4G
 #### 项目结构
 - api-gateway：网关模块
 - biz-common：基础通用模块
@@ -92,5 +95,3 @@ mvn clean package -pl service-api -am -amd -P prod -Dmaven.test.skip=true
 - 新增SQL，自动补全创建时间、创建人ID、修改时间、修改人ID、是否删除
 - 修改SQL，自动补全修改时间、修改人ID
 
-# cqie
-# cqie

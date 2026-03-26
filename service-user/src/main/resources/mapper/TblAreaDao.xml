@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblAreaDao">
+
+    <!-- 联合查询所有区域数据（带分页） -->
+    <select id="selectAllAreaWithRange" resultType="com.zds.biz.vo.response.user.TblAreaResponse">
+        SELECT
+            a.code,
+            a.area_name as areaName,
+            a.parent_code as parentCode,
+            a.level,
+            r.longitude,
+            r.latitude,
+            r.sort
+        FROM
+            tbl_area_node a
+                LEFT JOIN
+            tbl_area_range r ON a.code = r.code
+        ORDER BY
+            r.sort ASC, a.code ASC
+    </select>
+
+    <!-- 联合查询所有区域数据（不需要分页） -->
+    <select id="selectAllAreaWithRangeWithoutPage" resultType="com.zds.biz.vo.response.user.TblAreaResponse">
+        SELECT
+            a.code,
+            a.area_name as areaName,
+            a.parent_code as parentCode,
+            a.level,
+            r.longitude,
+            r.latitude,
+            r.sort
+        FROM
+            tbl_area_node a
+                LEFT JOIN
+            tbl_area_range r ON a.code = r.code
+        ORDER BY
+            r.sort ASC, a.code ASC
+    </select>
+
+    <!-- 查询所有区域的基本信息（不含经纬度和排序） -->
+    <select id="selectAllAreaBasicInfo" resultType="com.zds.biz.vo.response.user.TblAreaResponse">
+        SELECT
+            a.code,
+            a.area_name as areaName,
+            a.parent_code as parentCode,
+            a.level
+        FROM
+            tbl_area_node a
+        ORDER BY
+            a.code ASC
+    </select>
+
+    <!-- 根据code查询区域的经纬度和排序信息 -->
+    <select id="selectAreaRangeInfoByCode" resultType="com.zds.biz.vo.response.user.AreaRangeInfo">
+        SELECT
+            r.longitude,
+            r.latitude,
+            r.sort
+        FROM
+            tbl_area_range r
+        WHERE
+            r.code = #{code}
+        ORDER BY
+            r.sort ASC
+    </select>
+
+</mapper>

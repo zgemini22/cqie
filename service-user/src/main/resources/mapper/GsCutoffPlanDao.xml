@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.GsCutoffPlanDao">
+
+    <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.GsCutoffPlanResponse">
+        SELECT
+            id,
+            org_id AS orgId,
+            operation_id AS operationId,
+            start_time AS startTime,
+            end_time AS endTime,
+            operation_level AS operationLevel,
+            affected_households AS affectedHouseholds,
+            reason,
+            remark,
+            status,
+            create_time AS createTime,
+            create_id AS createId,
+            update_time AS updateTime,
+            update_id AS updateId
+        FROM gs_cutoff_plan
+        <where>
+            deleted = 0
+            <if test="request.startTime != null">
+                AND start_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND end_time &lt;= #{request.endTime}
+            </if>
+            <if test="request.operationType != null and request.operationType != ''">
+                AND operation_level = #{request.operationType}
+            </if>
+        </where>
+        ORDER BY update_time DESC
+    </select>
+
+</mapper>
