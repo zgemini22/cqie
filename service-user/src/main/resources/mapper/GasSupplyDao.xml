@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.GasSupplyDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, org_id, supply_reason, start_time, end_time, affected_households,
+        remark, status, create_time, create_id, update_time, update_id, deleted
+    </sql>
+
+    <!-- 分页查询列表（带企业名称和地址） -->
+    <select id="selectPageList" resultType="com.zds.biz.vo.GasSupplyResponse">
+        SELECT
+        sp.id,
+        sp.org_id,
+        sp.supply_reason AS supplyType,
+        sp.start_time AS planStartTime,
+        sp.end_time AS planEndTime,
+        sp.affected_households AS affectHouseholds,
+        sp.remark AS remarks,
+        sp.status AS supplyStatus,
+        sp.create_time AS createTime,
+        sp.create_id AS createUser,
+        sp.update_time AS updateTime,
+        sp.update_id AS updateUser,
+        org.organization_name AS enterpriseName,
+        san.district_code,
+        san.street_code,
+        san.detail_address
+        FROM gs_supply_plan sp
+        LEFT JOIN tbl_organization org ON sp.org_id = org.id AND org.deleted = 0
+        LEFT JOIN gs_supply_area_node san ON sp.org_id = san.org_id AND san.deleted = 0
+        WHERE sp.deleted = 0
+        <if test="planStartTime != null and planStartTime != ''">
+            AND DATE(sp.start_time) >= #{planStartTime}
+        </if>
+        <if test="planEndTime != null and planEndTime != ''">
+            AND DATE(sp.end_time) &lt;= #{planEndTime}
+        </if>
+        <if test="supplyStatus != null and supplyStatus != ''">
+            AND sp.status = #{supplyStatus}
+        </if>
+        <if test="supplyType != null and supplyType != ''">
+            AND sp.supply_reason = #{supplyType}
+        </if>
+        ORDER BY sp.create_time DESC
+    </select>
+
+    <!-- 简单分页查询（不带关联表） -->
+    <select id="selectSimplePageList" resultType="com.zds.user.po.GasSupplyPo">
+        SELECT
+        id, org_id, supply_reason, start_time, end_time,
+        affected_households, remark, status, create_time,
+        create_id, update_time, update_id, deleted
+        FROM gs_supply_plan
+        WHERE deleted = 0
+        <if test="planStartTime != null and planStartTime != ''">
+            AND DATE(start_time) >= #{planStartTime}
+        </if>
+        <if test="planEndTime != null and planEndTime != ''">
+            AND DATE(end_time) &lt;= #{planEndTime}
+        </if>
+        <if test="supplyStatus != null and supplyStatus != ''">
+            AND status = #{supplyStatus}
+        </if>
+        <if test="supplyType != null and supplyType != ''">
+            AND supply_reason = #{supplyType}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据ID查询详情（带关联信息） -->
+    <select id="selectDetailById" resultType="com.zds.biz.vo.GasSupplyResponse">
+        SELECT
+            sp.id,
+            sp.org_id,
+            sp.supply_reason AS supplyType,
+            sp.start_time AS planStartTime,
+            sp.end_time AS planEndTime,
+            sp.affected_households AS affectHouseholds,
+            sp.remark AS remarks,
+            sp.status AS supplyStatus,
+            sp.create_time AS createTime,
+            sp.create_id AS createUser,
+            sp.update_time AS updateTime,
+            sp.update_id AS updateUser,
+            org.organization_name AS enterpriseName,
+            san.district_code,
+            san.street_code,
+            san.detail_address
+        FROM gs_supply_plan sp
+                 LEFT JOIN tbl_organization org ON sp.org_id = org.id AND org.deleted = 0
+                 LEFT JOIN gs_supply_area_node san ON sp.org_id = san.org_id AND san.deleted = 0
+        WHERE sp.id = #{id} AND sp.deleted = 0
+    </select>
+
+</mapper>

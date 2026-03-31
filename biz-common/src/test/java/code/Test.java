@@ -15,7 +15,7 @@ public class Test {
     }
 
     public static void buildProjectByMybatisPlus() {
-        System.setProperty("user.dir", "D:\\智慧城市研究所\\开发框架\\gas-cloud-api");
+        System.setProperty("user.dir", "D:\\project\\gas\\server");
         //事故处置服务模块
 //        buildServiceDispose();
         //文件服务模块
@@ -75,7 +75,7 @@ public class Test {
                 .userName("root")
                 .userPassword("12345678")
                 .dataBaseName("gas_data_user")
-                .ctablePrefixs(List.of("demo"))
+                .ctablePrefixs(List.of("gs_cutoff_plan","gs_cutoff_area_node","gs_cutoff_operation"))
                 .build();
         GenerationUtil.quickGeneration(generateNeed);
     }

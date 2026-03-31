@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zds.biz.util.ThreadLocalUtil;
+import com.zds.biz.constant.user.InspectionStatusEnum;
 import com.zds.biz.vo.request.user.TpcInspectionContentRequest;
 import com.zds.biz.vo.response.user.TpcInspectionContentDetailResponse;
 import com.zds.biz.vo.response.user.TpcInspectionContentResponse;
@@ -26,10 +27,6 @@ import java.util.Date;
 @Slf4j
 @Service
 public class TpcInspectionContentServiceImpl implements TpcInspectionContentService {
-
-    private static final String STATUS_INSPECTED = "已巡检";
-    private static final String STATUS_PENDING = "待巡检";
-    private static final String STATUS_OVERDUE = "已超期";
 
     @Autowired
     private ThreadLocalUtil threadLocalUtil;
@@ -99,7 +96,7 @@ public class TpcInspectionContentServiceImpl implements TpcInspectionContentServ
             throw new IllegalArgumentException("巡检内容不存在");
         }
 
-        String newStatus = determineInspectStatus(content.getContent(), plan.getValidEndDate());
+        InspectionStatusEnum newStatus = determineInspectStatus(content.getContent(), plan.getValidEndDate());
         updateStatusIfNeeded(plan, newStatus);
 
         return tpcInspectionContentDao.selectDetailById(id);
@@ -111,16 +108,16 @@ public class TpcInspectionContentServiceImpl implements TpcInspectionContentServ
      * @param validEndDate 有效期截止时间
      * @return 巡检状态
      */
-    private String determineInspectStatus(String content, Date validEndDate) {
+    private InspectionStatusEnum determineInspectStatus(String content, Date validEndDate) {
         if (StrUtil.isNotBlank(content)) {
-            return STATUS_INSPECTED;
+            return InspectionStatusEnum.INSPECTED;
         }
 
         if (validEndDate != null && DateUtil.date().isAfter(validEndDate)) {
-            return STATUS_OVERDUE;
+            return InspectionStatusEnum.OVERDUE;
         }
 
-        return STATUS_PENDING;
+        return InspectionStatusEnum.PENDING;
     }
 
     /**
@@ -128,10 +125,11 @@ public class TpcInspectionContentServiceImpl implements TpcInspectionContentServ
      * @param plan 巡检计划
      * @param newStatus 新状态
      */
-    private void updateStatusIfNeeded(TpcInspectionPlan plan, String newStatus) {
-        if (!newStatus.equals(plan.getInspectStatus())) {
-            log.info("巡检状态变更，计划ID: {}, 原状态: {}, 新状态: {}", plan.getId(), plan.getInspectStatus(), newStatus);
-            plan.setInspectStatus(newStatus);
+    private void updateStatusIfNeeded(TpcInspectionPlan plan, InspectionStatusEnum newStatus) {
+        String newStatusValue = newStatus.getKey();
+        if (!newStatusValue.equals(plan.getInspectStatus())) {
+            log.info("巡检状态变更，计划ID: {}, 原状态: {}, 新状态: {}", plan.getId(), plan.getInspectStatus(), newStatusValue);
+            plan.setInspectStatus(newStatusValue);
             tpcInspectionPlanDao.updateById(plan);
         }
     }

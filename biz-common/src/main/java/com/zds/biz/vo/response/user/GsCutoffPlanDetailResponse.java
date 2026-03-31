@@ -17,15 +17,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class GsCutoffPlanDetailResponse {
 
-    @ApiModelProperty(value = "主键ID")
-    private Long id;
-
-    @ApiModelProperty(value = "组织机构ID")
-    private Long orgId;
-
-    @ApiModelProperty(value = "关联的停气作业ID")
-    private Long operationId;
-
     @ApiModelProperty(value = "计划停气时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
@@ -34,33 +25,22 @@ public class GsCutoffPlanDetailResponse {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
 
-    @ApiModelProperty(value = "停气作业等级")
+    @ApiModelProperty(value = "城燃企业")
+    private String organizationName;
+
+    @ApiModelProperty(value = "停气区域")
+    private String detailAddress;
+
+    @ApiModelProperty(value = "停气原因")
+    private String reason;
+
+    @ApiModelProperty(value = "作业等级")
     private String operationLevel;
 
-    @ApiModelProperty(value = "预计影响户数")
+    @ApiModelProperty(value = "影响户数")
     private Integer affectedHouseholds;
-
-    @ApiModelProperty(value = "停气原因描述")
-    private String reason;
 
     @ApiModelProperty(value = "备注说明")
     private String remark;
-
-    @ApiModelProperty(value = "状态")
-    private String status;
-
-    @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createTime;
-
-    @ApiModelProperty(value = "创建人ID")
-    private Long createId;
-
-    @ApiModelProperty(value = "最后修改时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date updateTime;
-
-    @ApiModelProperty(value = "修改人ID")
-    private Long updateId;
 
 }

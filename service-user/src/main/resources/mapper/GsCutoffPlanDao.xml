@@ -4,34 +4,37 @@
 
     <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.GsCutoffPlanResponse">
         SELECT
-            id,
-            org_id AS orgId,
-            operation_id AS operationId,
-            start_time AS startTime,
-            end_time AS endTime,
-            operation_level AS operationLevel,
-            affected_households AS affectedHouseholds,
-            reason,
-            remark,
-            status,
-            create_time AS createTime,
-            create_id AS createId,
-            update_time AS updateTime,
-            update_id AS updateId
-        FROM gs_cutoff_plan
+            p.id,
+            p.org_id AS orgId,
+            p.operation_id AS operationId,
+            p.start_time AS startTime,
+            p.end_time AS endTime,
+            p.operation_level AS operationLevel,
+            p.affected_households AS affectedHouseholds,
+            p.reason,
+            p.remark,
+            p.status,
+            p.create_time AS createTime,
+            p.create_id AS createId,
+            p.update_time AS updateTime,
+            p.update_id AS updateId,
+            a.detail_address AS detailAddress,
+            o.organization_name AS organizationName
+        FROM gs_cutoff_plan p
+        INNER JOIN gs_cutoff_area_node a ON p.id = a.source_id AND a.source_type = 'PLAN'
+        LEFT JOIN tbl_organization o ON p.org_id = o.id
         <where>
-            deleted = 0
+            p.deleted = 0
             <if test="request.startTime != null">
-                AND start_time &gt;= #{request.startTime}
+                AND p.start_time &gt;= #{request.startTime}
             </if>
             <if test="request.endTime != null">
-                AND end_time &lt;= #{request.endTime}
+                AND p.end_time &lt;= #{request.endTime}
             </if>
-            <if test="request.operationType != null and request.operationType != ''">
-                AND operation_level = #{request.operationType}
+            <if test="request.operationLevel != null and request.operationLevel != ''">
+                AND p.operation_level = #{request.operationLevel}
             </if>
         </where>
-        ORDER BY update_time DESC
     </select>
 
 </mapper>

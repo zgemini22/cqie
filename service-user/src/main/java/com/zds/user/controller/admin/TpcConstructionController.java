@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "三方施工模块-三方施工")
+@Api(tags = "三方施工模块-工程管理")
 @RestController
 @RequestMapping("/tpc/construction")
 public class TpcConstructionController {

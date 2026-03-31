@@ -55,7 +55,9 @@ public class TblOrganizationBusinessServiceImpl implements TblOrganizationBusine
 
     @Override
     public IPage<TblOrganizationBusinessResponse> list(TblOrganizationBusinessRequest request) {
-        return tblOrganizationBusinessDao.selectPageWithCondition(new Page<>(request.getPageNum(), request.getPageSize()), request);
+        long current = request.getPageNum() != null && request.getPageNum() > 0 ? request.getPageNum() : 1;
+        long size = request.getPageSize() != null && request.getPageSize() > 0 ? request.getPageSize() : 10;
+        return tblOrganizationBusinessDao.selectPageWithCondition(new Page<>(current, size), request);
     }
 
 }

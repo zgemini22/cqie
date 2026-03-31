@@ -4,29 +4,38 @@
 
     <select id="selectPageWithJoin" resultType="com.zds.biz.vo.response.user.GsCutoffOperationResponse">
         SELECT
-            id,
-            org_id AS orgId,
-            operation_type AS operationType,
-            plan_id AS planId,
-            start_time AS startTime,
-            end_time AS endTime,
-            operation_level AS operationLevel,
-            affected_households AS affectedHouseholds,
-            reason,
-            remark,
-            status,
-            create_time AS createTime,
-            create_id AS createId,
-            update_time AS updateTime,
-            update_id AS updateId
-        FROM gs_cutoff_operation
+            o.id,
+            o.org_id AS orgId,
+            o.operation_type AS operationType,
+            o.plan_id AS planId,
+            o.start_time AS startTime,
+            o.end_time AS endTime,
+            o.operation_level AS operationLevel,
+            o.affected_households AS affectedHouseholds,
+            o.reason,
+            o.remark,
+            o.status,
+            o.create_time AS createTime,
+            o.create_id AS createId,
+            o.update_time AS updateTime,
+            o.update_id AS updateId,
+            a.detail_address AS detailAddress,
+            t.organization_name AS organizationName
+        FROM gs_cutoff_operation o
+        INNER JOIN gs_cutoff_area_node a ON o.id = a.source_id AND a.source_type = 'OPERATION'
+        LEFT JOIN tbl_organization t ON o.org_id = t.id
         <where>
-            deleted = 0
-            <if test="request.id != null">
-                AND id = #{request.id}
+            o.deleted = 0
+            <if test="request.operationType != null and request.operationType != ''">
+                AND o.operation_type = #{request.operationType}
+            </if>
+            <if test="request.startTime != null">
+                AND o.start_time &gt;= #{request.startTime}
+            </if>
+            <if test="request.endTime != null">
+                AND o.end_time &lt;= #{request.endTime}
             </if>
         </where>
-        ORDER BY update_time DESC
     </select>
 
 </mapper>

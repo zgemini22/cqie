@@ -11,10 +11,10 @@ import java.util.Date;
 @Data
 public class GsCutoffPlanRequest extends PageRequest {
 
-    @ApiModelProperty(value = "计划停气时间")
+    @ApiModelProperty(value = "停气时间")
     private Date startTime;
 
-    @ApiModelProperty(value = "计划恢复时间")
+    @ApiModelProperty(value = "恢复时间")
     private Date endTime;
 
     @ApiModelProperty(value = "作业等级")

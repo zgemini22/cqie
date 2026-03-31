@@ -13,7 +13,7 @@ public interface GsCutoffOperationService {
 
     boolean deleteById(Long id);
 
-    GsCutoffOperationDetailResponse detail(Long id);
+    GsCutoffOperationDetailResponse detail(Long id, String detailAddress);
 
     IPage<GsCutoffOperationResponse> list(GsCutoffOperationRequest request);
 }

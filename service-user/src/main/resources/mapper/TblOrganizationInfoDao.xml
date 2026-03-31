@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.TblOrganizationInfoDao">
+
+    <resultMap id="BaseResultMap" type="com.zds.user.po.TblOrganizationInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="org_id" property="orgId" jdbcType="BIGINT"/>
+        <result column="organization_name" property="organizationName" jdbcType="VARCHAR"/>
+        <result column="short_name" property="shortName" jdbcType="VARCHAR"/>
+        <result column="credit_code" property="creditCode" jdbcType="VARCHAR"/>
+        <result column="license_issuing_authority" property="licenseIssuingAuthority" jdbcType="VARCHAR"/>
+        <result column="license" property="license" jdbcType="VARCHAR"/>
+        <result column="license_expiry_date" property="licenseExpiryDate" jdbcType="DATE"/>
+        <result column="organization_type" property="organizationType" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="street" property="street" jdbcType="VARCHAR"/>
+        <result column="legal_representative" property="legalRepresentative" jdbcType="VARCHAR"/>
+        <result column="registered_capital" property="registeredCapital" jdbcType="VARCHAR"/>
+        <result column="registered_date" property="registeredDate" jdbcType="DATE"/>
+        <result column="contact_person" property="contactPerson" jdbcType="VARCHAR"/>
+        <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR"/>
+        <result column="company_scale" property="companyScale" jdbcType="VARCHAR"/>
+        <result column="business_scope" property="businessScope" jdbcType="VARCHAR"/>
+        <result column="sales_scope" property="salesScope" jdbcType="VARCHAR"/>
+        <result column="gas_supply_scope" property="gasSupplyScope" jdbcType="VARCHAR"/>
+        <result column="license_attachment" property="licenseAttachment" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_id" property="createId" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_id" property="updateId" jdbcType="BIGINT"/>
+        <result column="deleted" property="deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <select id="selectCompanyPage" resultMap="BaseResultMap">
+        SELECT oi.*
+        FROM tbl_organization_info oi
+        INNER JOIN tbl_organization o ON o.id = oi.org_id
+        WHERE o.deleted = 0
+        AND o.organization_type = 'company'
+        <if test="name != null and name != ''">
+            AND oi.organization_name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        ORDER BY oi.create_time DESC
+    </select>
+
+</mapper>

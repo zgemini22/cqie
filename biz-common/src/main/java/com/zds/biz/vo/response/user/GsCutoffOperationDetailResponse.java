@@ -10,60 +10,40 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@ApiModel(description = "停气作业详情返回")
+@ApiModel(description = "停气管理详情返回")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GsCutoffOperationDetailResponse {
 
-    @ApiModelProperty(value = "主键ID")
-    private Long id;
-
-    @ApiModelProperty(value = "组织机构ID")
-    private Long orgId;
-
-    @ApiModelProperty(value = "类型")
-    private String operationType;
-
-    @ApiModelProperty(value = "关联计划ID")
-    private Long planId;
-
-    @ApiModelProperty(value = "实际停气时间")
+    @ApiModelProperty(value = "停气时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startTime;
 
-    @ApiModelProperty(value = "预计恢复时间")
+    @ApiModelProperty(value = "城燃企业")
+    private String organizationName;
+
+    @ApiModelProperty(value = "计划恢复时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
 
-    @ApiModelProperty(value = "作业等级")
-    private String operationLevel;
+    @ApiModelProperty(value = "停气类型")
+    private String operationType;
 
-    @ApiModelProperty(value = "实际影响户数")
-    private Integer affectedHouseholds;
+    @ApiModelProperty(value = "停气区域")
+    private String detailAddress;
 
     @ApiModelProperty(value = "停气原因")
     private String reason;
 
-    @ApiModelProperty(value = "作业过程备注")
+    @ApiModelProperty(value = "停气作业等级")
+    private String operationLevel;
+
+    @ApiModelProperty(value = "影响户数")
+    private Integer affectedHouseholds;
+
+    @ApiModelProperty(value = "备注说明")
     private String remark;
-
-    @ApiModelProperty(value = "状态")
-    private String status;
-
-    @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createTime;
-
-    @ApiModelProperty(value = "创建人ID")
-    private Long createId;
-
-    @ApiModelProperty(value = "修改时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date updateTime;
-
-    @ApiModelProperty(value = "修改人ID")
-    private Long updateId;
 
 }

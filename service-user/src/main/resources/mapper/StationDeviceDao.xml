@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.StationDeviceDao">
+
+    <!-- 联合查询站点和设备状态 -->
+    <select id="selectStationDeviceInfo" resultType="com.zds.biz.vo.response.user.StationDeviceResponse">
+        SELECT
+        s.id,
+        s.station_name as stationName,
+        s.is_enabled as isEnabled,
+        w.device_status as deviceStatus
+        FROM
+        station_info s
+        LEFT JOIN
+        warning_device w ON s.id = w.related_subject_id
+        WHERE
+        1=1
+            AND s.org_id = #{orgId}
+    </select>
+</mapper>

@@ -32,7 +32,7 @@ public class GsCutoffPlanResponse {
     private String organizationName;
 
     @ApiModelProperty(value = "停气区域")
-    private Long detailAddress;
+    private String detailAddress;
 
     @ApiModelProperty(value = "停气原因")
     private String reason;

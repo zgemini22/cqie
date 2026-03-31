@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "保供管理-停气涉及区域")
+/*@Api(tags = "保供管理-停气涉及区域")*/
 @RestController
 @RequestMapping("/cutoff/areaNode")
 public class GsCutoffAreaNodeController {

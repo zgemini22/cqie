@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zds.biz.targetcheck.Authorization;
 import com.zds.biz.vo.BaseResult;
 import com.zds.biz.vo.IdRequest;
+import com.zds.biz.vo.request.user.GsCutoffOperationDetailRequest;
 import com.zds.biz.vo.request.user.GsCutoffOperationRequest;
 import com.zds.biz.vo.response.user.GsCutoffOperationDetailResponse;
 import com.zds.biz.vo.response.user.GsCutoffOperationResponse;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = "保供管理-停气作业")
+@Api(tags = "保供管理-停气管理")
 @RestController
 @RequestMapping("/cutoff/operation")
 public class GsCutoffOperationController {
@@ -55,7 +56,7 @@ public class GsCutoffOperationController {
     @Authorization
     @ApiOperation("停气作业详情")
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
-    public BaseResult<GsCutoffOperationDetailResponse> detail(@RequestBody IdRequest request) {
-        return BaseResult.success(gsCutoffOperationService.detail(request.getId()));
+    public BaseResult<GsCutoffOperationDetailResponse> detail(@RequestBody GsCutoffOperationDetailRequest request) {
+        return BaseResult.success(gsCutoffOperationService.detail(request.getId(), request.getDetailAddress()));
     }
 }
