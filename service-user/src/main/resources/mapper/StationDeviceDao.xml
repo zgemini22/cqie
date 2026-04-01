@@ -8,13 +8,15 @@
         s.id,
         s.station_name as stationName,
         s.is_enabled as isEnabled,
-        w.device_status as deviceStatus
+        t.status as deviceStatus
         FROM
         station_info s
         LEFT JOIN
-        warning_device w ON s.id = w.related_subject_id
+        warning_info w ON s.id = w.related_subject_id
+        LEFT JOIN
+        t_warning t ON w.id = t.id
         WHERE
         1=1
-            AND s.org_id = #{orgId}
+        AND s.org_id = #{orgId}
     </select>
 </mapper>

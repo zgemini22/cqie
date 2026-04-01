@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zds.user.dao.StationDeviceDao" >
+    <resultMap id="RunDetectionResultMap" type="com.zds.biz.vo.response.user.RunDetectionResponse">
+        <result column="device_code" property="deviceCode" />
+        <result column="device_name" property="deviceName" />
+        <result column="monitor_type" property="monitorType" />
+        <result column="monitor_value" property="monitorValue" />
+        <result column="monitor_location" property="monitorLocation" />
+        <result column="install_address" property="installAddress" />
+        <result column="last_collect_time" property="lastCollectTime" />
+    </resultMap>
+
+    <resultMap id="LeakDetectionResultMap" type="com.zds.biz.vo.response.user.LeakDetectionResponse">
+        <result column="device_code" property="deviceCode" />
+        <result column="device_name" property="deviceName" />
+        <result column="monitor_type" property="monitorType" />
+        <result column="monitor_value" property="monitorValue" />
+        <result column="install_address" property="installAddress" />
+        <result column="last_collect_time" property="lastCollectTime" />
+        <result column="unprocessed_warning" property="unprocessedWarning" />
+        <result column="running_status" property="runningStatus" />
+    </resultMap>
+
+    <!-- 运行监测 -->
+    <select id="getRunDetectionList" resultMap="RunDetectionResultMap">
+        SELECT
+        d.device_code,
+        d.device_name,
+        d.monitor_type,
+        r.monitor_value,
+        r.monitor_location,
+        d.install_address,
+        r.last_collect_time
+        FROM tbl_device d
+        LEFT JOIN station_device_record r ON r.id = (
+        SELECT id FROM station_device_record
+        WHERE device_id = d.id AND deleted = 0
+        ORDER BY last_collect_time DESC
+        LIMIT 1
+        )
+        WHERE d.deleted = 0
+        <if test="request.stationId != null">
+            AND r.station_id = #{request.stationId}
+        </if>
+        <if test="request.deviceCode != null and request.deviceCode != ''">
+            AND d.device_code LIKE CONCAT('%', #{request.deviceCode}, '%')
+        </if>
+        <if test="request.deviceName != null and request.deviceName != ''">
+            AND d.device_name LIKE CONCAT('%', #{request.deviceName}, '%')
+        </if>
+        <if test="request.monitorType != null and request.monitorType != ''">
+            AND d.monitor_type LIKE CONCAT('%', #{request.monitorType}, '%')
+        </if>
+        ORDER BY r.last_collect_time DESC
+    </select>
+
+    <!-- 泄漏监测 -->
+    <select id="getLeakDetectionList" resultMap="LeakDetectionResultMap">
+        SELECT
+        d.device_code,
+        d.device_name,
+        d.monitor_type,
+        r.monitor_value,
+        r.monitor_location,
+        d.install_address,
+        r.last_collect_time,
+        (
+        SELECT COUNT(*)
+        FROM warning_device w
+        WHERE w.device_id = d.id
+        AND w.verify_result = '隐患'
+        AND w.deleted = 0
+        ) AS unprocessed_warning,
+        r.running_status
+        FROM tbl_device d
+        LEFT JOIN station_device_record r ON r.id = (
+        SELECT id FROM station_device_record
+        WHERE device_id = d.id AND deleted = 0
+        ORDER BY last_collect_time DESC
+        LIMIT 1
+        )
+        WHERE d.deleted = 0
+        <if test="request.stationId != null">
+            AND r.station_id = #{request.stationId}
+        </if>
+        <if test="request.deviceCode != null and request.deviceCode != ''">
+            AND d.device_code LIKE CONCAT('%', #{request.deviceCode}, '%')
+        </if>
+        <if test="request.deviceName != null and request.deviceName != ''">
+            AND d.device_name LIKE CONCAT('%', #{request.deviceName}, '%')
+        </if>
+        <if test="request.monitorType != null and request.monitorType != ''">
+            AND d.monitor_type LIKE CONCAT('%', #{request.monitorType}, '%')
+        </if>
+        ORDER BY r.last_collect_time DESC
+    </select>
+
+    <!-- 根据设备编码查询设备详情 -->
+    <select id="selectDeviceDetailByCode" resultType="com.zds.biz.vo.response.user.DeviceDetailResponse">
+        SELECT
+            d.device_code AS deviceCode,
+            d.device_name AS deviceName,
+            d.monitor_type AS monitorType,
+            d.device_model AS deviceModel,
+            d.manufacturer,
+            d.`range`,
+            d.threshold_upper AS thresholdUpper,
+            d.install_address AS installAddress,
+            d.monitoring_point AS monitoringPoint,
+            d.real_time_voltage AS realTimeVoltage,
+            d.real_time_power AS realTimePower,
+            r.running_status AS runningStatus
+        FROM tbl_device d
+                 LEFT JOIN station_device_record r ON r.id = (
+            SELECT id FROM station_device_record
+            WHERE device_id = d.id AND deleted = 0
+            ORDER BY last_collect_time DESC
+            LIMIT 1
+            )
+        WHERE d.device_code = #{deviceCode}
+          AND d.deleted = 0
+    </select>
+</mapper>

@@ -14,6 +14,6 @@ public class StationDeviceResponse {
     @ApiModelProperty("是否启用")
     private Integer isEnabled;
 
-    @ApiModelProperty("设备状态")
+    @ApiModelProperty("状态：待处理、处理中、已处理")
     private String deviceStatus;
 }

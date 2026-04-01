@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zds.user.dao.risk.RiskPointMapper">
+
+    <resultMap id="RiskPointDetailResultMap" type="com.zds.user.po.risk.RiskPointDetail">
+        <id column="id" property="id"/>
+        <result column="risk_name" property="riskName"/>
+        <result column="risk_code" property="riskCode"/>
+        <result column="town_street_name" property="townStreetName"/>
+        <result column="address" property="address"/>
+        <result column="prevent_status" property="preventStatus"/>
+        <result column="organization_name" property="organizationName"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="plan_quantity" property="planQuantity"/>
+        <result column="unit" property="unit"/>
+        <result column="plan_install_start_date" property="planInstallStartDate"/>
+        <result column="plan_install_end_date" property="planInstallEndDate"/>
+        <result column="plan_install_date" property="planInstallDate"/>
+    </resultMap>
+
+    <select id="selectRiskPointDetailPage" resultMap="RiskPointDetailResultMap">
+        SELECT
+        rp.id,
+        rp.risk_name,
+        rp.risk_code,
+        rp.town_street_name,
+        rp.address,
+        rp.prevent_status,
+        org.organization_name,
+        IFNULL(MAX(dip.device_type), '') AS device_type,
+        IFNULL(MAX(dip.plan_quantity), 0) AS plan_quantity,
+        IFNULL(MAX(dip.unit), '') AS unit,
+        IFNULL(MAX(dip.plan_install_start_date), '') AS plan_install_start_date,
+        IFNULL(MAX(dip.plan_install_end_date), '') AS plan_install_end_date,
+        IFNULL(MAX(dip.plan_install_start_date), '') AS plan_install_date
+        FROM rp_risk_point rp
+        LEFT JOIN tbl_organization org
+        ON rp.org_id = org.id AND org.deleted = 0
+        LEFT JOIN rp_device_install_plan dip
+        ON rp.id = dip.risk_id AND dip.deleted = 0
+        WHERE rp.deleted = 0
+
+        <!-- 风险点位名称 -->
+        <if test="riskName != null and riskName != ''">
+            AND rp.risk_name LIKE CONCAT('%', #{riskName}, '%')
+        </if>
+
+        <!-- 风险点编号 -->
+        <if test="riskCode != null and riskCode != ''">
+            AND rp.risk_code = #{riskCode}
+        </if>
+
+        <!-- 城燃企业 -->
+        <if test="organizationName != null and organizationName != ''">
+            AND org.organization_name = #{organizationName}
+        </if>
+
+        <!-- 日期区间查询（彻底解决500+筛选异常） -->
+        <if test="planInstallStartDate != null and planInstallStartDate != ''">
+            AND dip.plan_install_start_date >= #{planInstallStartDate}
+        </if>
+        <if test="planInstallEndDate != null and planInstallEndDate != ''">
+            AND dip.plan_install_end_date &lt;= #{planInstallEndDate}
+        </if>
+
+        GROUP BY
+        rp.id,
+        rp.risk_name,
+        rp.risk_code,
+        rp.town_street_name,
+        rp.address,
+        rp.prevent_status,
+        org.organization_name
+        ORDER BY rp.id DESC
+    </select>
+
+    <!-- 根据风险点ID查设备+风险点+企业 -->
+    <select id="selectDeviceListByRiskId" resultMap="RiskPointDetailResultMap">
+        SELECT
+            rp.id,
+            rp.risk_name,
+            rp.risk_code,
+            rp.town_street_name,
+            rp.address,
+            rp.prevent_status,
+            org.organization_name,
+            dip.id          as deviceId,
+            dip.device_type,
+            dip.plan_quantity,
+            dip.unit,
+            dip.plan_install_start_date,
+            dip.plan_install_end_date,
+            dip.plan_install_start_date as plan_install_date
+        FROM rp_risk_point rp
+                 LEFT JOIN tbl_organization org
+                           ON rp.org_id = org.id AND org.deleted = 0
+                 LEFT JOIN rp_device_install_plan dip
+                           ON rp.id = dip.risk_id AND dip.deleted = 0
+        WHERE rp.id = #{riskPointId}
+    </select>
+
+    <!-- 仅查询风险点+企业 -->
+    <select id="selectRiskPointById" resultMap="RiskPointDetailResultMap">
+        SELECT
+            rp.id,
+            rp.risk_name,
+            rp.risk_code,
+            rp.town_street_name,
+            rp.address,
+            rp.prevent_status,
+            org.organization_name,
+            NULL as deviceId,
+            NULL as device_type,
+            NULL as plan_quantity,
+            NULL as unit,
+            NULL as plan_install_start_date,
+            NULL as plan_install_end_date,
+            NULL as plan_install_date
+        FROM rp_risk_point rp
+                 LEFT JOIN tbl_organization org
+                           ON rp.org_id = org.id AND org.deleted = 0
+        WHERE rp.id = #{riskPointId} AND rp.deleted = 0
+    </select>
+
+</mapper>
